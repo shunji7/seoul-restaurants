@@ -18,11 +18,12 @@ header p{font-size:11px;color:#888;margin-top:2px}
 .grid{max-width:960px;margin:16px auto 60px;padding:0 16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px}
 .card{background:#fff;border:1px solid #e8e6e0;border-radius:16px;overflow:hidden;transition:.2s}
 .card:hover{box-shadow:0 6px 24px rgba(0,0,0,.1);transform:translateY(-2px)}
-.photos{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:120px 100px;gap:2px;background:#e8e6e0}
-.photos img{width:100%;height:100%;object-fit:cover;display:block}
-.photos img:first-child{grid-row:span 2;height:100%}
-.photo-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#ede9e1;font-size:28px}
-.photo-ph.sm{font-size:20px}
+.photos{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:130px 110px;gap:2px;background:#e8e6e0;position:relative}
+.photos .p0{grid-row:span 2;height:100%;width:100%}
+.photos .p1,.photos .p2{height:100%;width:100%}
+.photo-img{width:100%;height:100%;object-fit:cover;display:block;background:#ede9e1}
+.photo-ph{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#ede9e1;font-size:32px;gap:4px}
+.photo-ph span{font-size:10px;color:#aaa}
 .body{padding:14px}
 .top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px}
 .name{font-size:15px;font-weight:700;line-height:1.3}
@@ -44,7 +45,7 @@ header p{font-size:11px;color:#888;margin-top:2px}
 .mapbtn:hover{background:#a83a22}
 .mapbtn svg{width:13px;height:13px;fill:#fff;flex-shrink:0}
 footer{text-align:center;padding:20px;font-size:11px;color:#999;border-top:1px solid #e8e6e0;background:#fff}
-@media(max-width:480px){.grid{grid-template-columns:1fr}.photos{grid-template-rows:110px 90px}}
+@media(max-width:480px){.grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -54,7 +55,7 @@ footer{text-align:center;padding:20px;font-size:11px;color:#999;border-top:1px s
       <h1>🇰🇷 ソウル旅行 レストラン候補</h1>
       <p>2025年4月2日〜5日 ／ 明洞拠点 3泊4日</p>
     </div>
-    <div class="hdr-r"><div>全24店舗</div><div>気になるお店をタップ→地図へ</div></div>
+    <div class="hdr-r"><div>全24店舗</div><div>タップ → Googleマップで見る</div></div>
   </div>
 </header>
 <div class="filters">
@@ -73,121 +74,175 @@ footer{text-align:center;padding:20px;font-size:11px;color:#999;border-top:1px s
 
 <script>
 const R=[
-  {name:"オダリチプ",kr:"오다리집",area:"明洞",genre:"🦀 カンジャンケジャン（ワタリガニ醤油漬け）",vibe:"宿から徒歩3分。生のワタリガニを特製醤油ダレに漬け込んだ「ご飯泥棒」料理。夜はオーナーのライブ公演も楽しめる活気ある2階レストラン。",tags:["海鮮","カニ","年中無休","明洞徒歩3分"],rating:4.7,rc:6010,hours:"9:00〜23:00（年中無休）",budget:"₩35,000〜/人",m:false,h24:false,pid:"ChIJNbhaHPGifDURDCGKakYKwXw",lat:37.5614,lng:126.9834,cat:["明洞","海鮮"],photos:["https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=placeholder&key="]},
-  {name:"ランジュカルミョン",kr:"란주카르면",area:"明洞",genre:"🍜 海鮮ジャジャン麺・刀削麺",vibe:"動画ランキング2位。海鮮たっぷりのジャジャン麺と刀削麺のモチモチ食感が異次元と評判。いつも行列の人気店。",tags:["麺","海鮮","コスパ◎","行列"],rating:4.2,rc:1574,hours:"11:00〜21:30",budget:"₩15,000〜/人",m:false,h24:false,pid:"ChIJO6g-RvGifDURx_vXYokm50I",lat:37.5610,lng:126.9821,cat:["明洞","麺"],photos:[]},
-  {name:"明洞ソソカルビ",kr:"명동소소갈비",area:"明洞",genre:"🥩 ドラム缶立ち食い焼肉（カルビ）",vibe:"動画5位。ドラム缶グリルで豪快に焼くユニークなスタイル。秘伝タレに漬けたカルビが絶品。1人前から注文でき、ビール片手に楽しめるカジュアルな雰囲気。",tags:["焼肉","牛肉","立ち食い","1人前OK"],rating:4.6,rc:414,hours:"11:00〜23:00",budget:"₩15,000〜/人",m:false,h24:false,pid:"ChIJsZdcC_CifDURqzhAwVye6TE",lat:37.5648,lng:126.9833,cat:["明洞","焼肉"],photos:[]},
-  {name:"明洞ハルモニククス",kr:"명동할머니국수",area:"明洞",genre:"🍳 キムチククス（朝食向き）",vibe:"1958年創業。朝6:30から営業するローカル食堂。やさしい味わいのキムチ麺と包み揚げが朝の旅に染みる。英語メニューあり・アットホームな雰囲気。",tags:["麺","朝食","老舗","激安"],rating:4.2,rc:323,hours:"6:30〜20:00（日曜休）",budget:"₩6,000〜/人",m:false,h24:false,pid:"ChIJW56T2u-ifDURQIOx2ZTpObQ",lat:37.5646,lng:126.9846,cat:["明洞","麺"],photos:[]},
-  {name:"明洞餃子",kr:"명동교자",area:"明洞",genre:"🥟 カルグクス・マンドゥ（餃子）",vibe:"常に大行列の超有名店。ミシュラン掲載。薄皮の手作りマンドゥとコシのあるカルグクスが看板。メニューは4種類のみで潔い。",tags:["麺","餃子","ミシュラン","行列"],rating:4.2,rc:14300,hours:"10:30〜21:00",budget:"₩10,000〜/人",m:true,h24:false,pid:"ChIJW7FBDfCifDURHTpisLbVUH0",lat:37.5625,lng:126.9856,cat:["明洞","麺","ミシュラン"],photos:[]},
-  {name:"南本明家",kr:"남본명가",area:"明洞",genre:"🍜 平壌式冷麺（ナengミョン）",vibe:"澄んだ牛骨スープの上品な冷麺。フルーティーでさっぱりした味わいで、食べ過ぎた後や暑い日に最高。スタッフの丁寧な接客も評判。",tags:["麺","冷麺","スープ","さっぱり"],rating:3.8,rc:2258,hours:"11:30〜22:00（土日〜21:00）",budget:"₩15,000〜/人",m:false,h24:false,pid:"ChIJqzfQfO6ifDURU8xTjuLm4Bk",lat:37.5671,lng:126.9816,cat:["明洞","麺"],photos:[]},
-  {name:"高峯参鶏湯",kr:"고봉삼계탕",area:"明洞",genre:"🍗 参鶏湯（サムゲタン）",vibe:"動画18位。薬味の効いた濃厚スープに、箸でほぐれるほど柔らかい丸鶏。韓国の滋養強壮ご飯の定番で、旅の疲れを癒やしてくれる。",tags:["スープ","鶏肉","薬膳","体に優しい"],rating:4.0,rc:1019,hours:"10:00〜21:00",budget:"₩18,000〜/人",m:false,h24:false,pid:"ChIJVVVVVe6ifDURSWScVgmPSds",lat:37.5648,lng:126.9836,cat:["明洞","麺"],photos:[]},
-  {name:"テハンコプチャン",kr:"군자대한 곱창",area:"明洞",genre:"🔥 ホルモン焼き（コプチャン）",vibe:"動画6位。スタッフが目の前で豪快に焼いてくれる。臭みがなくヘルシーで地元民にも大人気。深夜1:30まで営業しているので夜遊び後にも◎",tags:["ホルモン","深夜OK","賑やか","スタッフ焼き"],rating:4.8,rc:2294,hours:"11:00〜翌1:30",budget:"₩20,000〜/人",m:false,h24:false,pid:"ChIJj1gcPO2jfDURUHQtWdJzPwA",lat:37.5646,lng:126.9844,cat:["明洞","焼肉"],photos:[]},
-  {name:"チャニャンジプ",kr:"찬양집",area:"鍾路",genre:"🍜 海鮮カルグクス・マンドゥ",vibe:"1965年創業のミシュランビブグルマン店。毎朝市場から仕入れる新鮮な海鮮出汁のカルグクスが絶品。益善洞レトロ街のすぐ隣という好立地。",tags:["麺","海鮮","ミシュラン","激安","老舗"],rating:4.0,rc:1212,hours:"10:00〜21:00（日曜休）",budget:"₩9,000〜/人",m:true,h24:false,pid:"ChIJFZv1uN2ifDUR6r3AK3lMtYs",lat:37.5728,lng:126.9903,cat:["鍾路","麺","ミシュラン"],photos:[]},
-  {name:"ハルメチプ",kr:"할매집",area:"鍾路",genre:"🐷 族パル（豚足）・カムジャタン",vibe:"景福宮裏の路地の隠れ家。2017年からミシュランビブグルマン連続受賞。靴を脱いで入る昔ながらの食堂スタイルが味わい深い。並んで食べる価値あり。",tags:["豚肉","ミシュラン","隠れ家","行列"],rating:4.0,rc:600,hours:"水〜日 11:50〜21:00（月休・火は夜のみ）",budget:"₩15,000〜/人",m:true,h24:false,pid:"ChIJSz0DNZSifDURbyoY-rvEl1o",lat:37.5757,lng:126.9715,cat:["鍾路","ミシュラン"],photos:[]},
-  {name:"南海クルクッパプ",kr:"남해굴국밥",area:"鍾路",genre:"🦪 牡蠣クッパ（朝食向き）",vibe:"朝から開く牡蠣クッパの名店。4月は春牡蠣が旬で最高の時期。ローカルな雰囲気たっぷりで、旅の朝食や二日酔い対策にぴったり。",tags:["海鮮","牡蠣","朝食","早朝OK"],rating:4.0,rc:230,hours:"10:00〜22:00（日曜休）",budget:"₩12,000〜/人",m:false,h24:false,pid:"ChIJ83NeTiGjfDURuunlHYFXCM8",lat:37.5713,lng:127.0017,cat:["鍾路","海鮮"],photos:[]},
-  {name:"ジョジョカルグクス市庁店",kr:"조조칼국수 시청점",area:"鍾路",genre:"🍜 シオフキ貝カルグクス・海鮮チヂミ",vibe:"大邱発ソウル進出で即人気店に。産地直送のシオフキ貝がたっぷりの濃厚出汁が特徴。海鮮チヂミも絶品。日本語対応ウェイティング機器あり。",tags:["麺","海鮮","チヂミ","日本語OK"],rating:4.6,rc:754,hours:"月〜金 10-16/17-21:30 土日 10-21:30",budget:"₩10,000〜/人",m:false,h24:false,pid:"ChIJXRM5_rijfDURyDAkfB9M3XM",lat:37.5620,lng:126.9743,cat:["鍾路","麺"],photos:[]},
-  {name:"チョルギル王カルビサル",kr:"철길왕갈비살",area:"弘大",genre:"🥩 牛カルビサル炭火焼肉",vibe:"弘大と新村の間、京義線の線路跡の緑道沿いにある人気焼肉店。TV出演の名店。炭火の香りが染み込んだ生カルビが絶品。年中無休でコスパも◎",tags:["焼肉","牛肉","炭火","年中無休"],rating:4.1,rc:734,hours:"毎日 12:00〜23:00（年中無休）",budget:"₩20,000〜/人",m:false,h24:false,pid:"ChIJf_JlE8CYfDURE2IgrLHl3Ws",lat:37.5546,lng:126.9316,cat:["弘大","焼肉"],photos:[]},
-  {name:"ソムンナンチュクミ",kr:"소문난쭈꾸미",area:"弘大",genre:"🐙 チュクミ（イイダコ）炒め",vibe:"4月はメスのイイダコが卵を持つ旬の最盛期。甘辛コチュジャンで炒めたイイダコをエゴマの葉に包んで食べる韓国の定番。〆の炒めご飯が最高。",tags:["海鮮","タコ","辛い","旬4月"],rating:4.0,rc:100,hours:"要確認",budget:"₩15,000〜/人",m:false,h24:false,pid:"",lat:37.5480,lng:126.9244,cat:["弘大","海鮮"],photos:[]},
-  {name:"ヨングァンポッサム",kr:"영광보쌈",area:"弘大",genre:"🥬 ポッサム（茹で豚の包み食べ）",vibe:"柔らかく茹でた豚肉をキムチや白菜に包んで食べる韓国の定番料理。新村エリアの人気店でリーズナブルに本場の味を楽しめる。",tags:["豚肉","さっぱり","コスパ◎"],rating:4.0,rc:342,hours:"要確認",budget:"₩10,000〜20,000/人",m:false,h24:false,pid:"",lat:37.5550,lng:126.9368,cat:["弘大"],photos:[]},
-  {name:"ソグムグイカルメギサル",kr:"소금구이갈매기살",area:"乙支路",genre:"🥩 塩焼きカルメギサル（豚横隔膜）",vibe:"シンプルな塩で焼く豚の横隔膜が看板。脂が少なくさっぱりした部位でビールとの相性が抜群。地元民御用達の夕食向き名店。",tags:["焼肉","豚肉","塩焼き","夕食向き"],rating:4.4,rc:106,hours:"16:00〜23:00（日曜休）",budget:"₩15,000〜/人",m:false,h24:false,pid:"ChIJGeGcyWOifDUR2N3QiVl2qqE",lat:37.5578,lng:126.9690,cat:["乙支路","焼肉"],photos:[]},
-  {name:"ハングッグァン",kr:"한국관",area:"乙支路",genre:"🔥 韓国焼肉（24時間）",vibe:"乙支路の24時間営業焼肉。深夜到着後や遅い夕食に重宝する。ローカル感たっぷりの活気ある空間で地元の人々と混じって食べる体験が◎",tags:["焼肉","24時間","深夜OK","ローカル"],rating:3.7,rc:456,hours:"24時間営業",budget:"₩10,000〜20,000/人",m:false,h24:true,pid:"ChIJB0oVVgWjfDURQ3faI4FsGR8",lat:37.5660,lng:126.9901,cat:["乙支路","焼肉"],photos:[]},
-  {name:"金豚食堂",kr:"금돼지식당",area:"乙支路",genre:"🐷 高級サムギョプサル（黒豚）",vibe:"スタッフが完璧に焼いてくれる高品質な黒豚焼肉。3種の部位を順番に食べる本格スタイル。行列必至だが一度は食べたい名店。",tags:["焼肉","豚肉","高級","スタッフ焼き","行列"],rating:4.3,rc:2948,hours:"11:30〜23:00",budget:"₩25,000〜/人",m:false,h24:false,pid:"ChIJFRmIDRGjfDUR2nv7h8qMx2Y",lat:37.5571,lng:127.0117,cat:["乙支路","焼肉"],photos:[]},
-  {name:"オリマダン",kr:"오리마당",area:"明洞",genre:"🦆 鴨料理（オリ）",vibe:"市庁駅7番出口近くの鴨料理専門店。ヘルシーで旨みたっぷりの鴨肉をチヂミや鍋などで楽しめる。地元の常連客が多いローカルな雰囲気。",tags:["鴨肉","ヘルシー","ローカル"],rating:4.0,rc:150,hours:"要確認",budget:"₩20,000〜/人",m:false,h24:false,pid:"",lat:37.5650,lng:126.9775,cat:["明洞"],photos:[]},
-  {name:"ドッチ",kr:"Dotch",area:"明洞",genre:"🥩 熟成ヒレ肉バゲット乗せ（新感覚）",vibe:"動画ランキング1位。口どけするほど柔らかい熟成ヒレ肉をバジルソースとバゲットで食べる独創スタイル。清潔感があり女性にも大人気。",tags:["牛肉","創作","清潔感◎","コスパ◎"],rating:4.5,rc:500,hours:"要確認",budget:"₩20,000〜/人",m:false,h24:false,pid:"",lat:37.5621,lng:126.9842,cat:["明洞","焼肉"],photos:[]},
-  {name:"ピョルミコプチャン2号店",kr:"별미곱창 2호점",area:"その他",genre:"🔥 コプチャン・ホルモン焼き",vibe:"ロッテワールド近くの芳夷洞にあるホルモン専門店。臭みがなくビールとの相性が抜群。24時まで営業しているので夜遅くでも安心。",tags:["ホルモン","深夜OK","ビール"],rating:4.2,rc:200,hours:"11:00〜24:00",budget:"₩15,000〜/人",m:false,h24:false,pid:"",lat:37.5079,lng:127.1239,cat:["その他","焼肉"],photos:[]},
-  {name:"永東ソルロンタン",kr:"영동설렁탕",area:"その他",genre:"🍲 ソルロンタン（牛骨白湯スープ）",vibe:"江南エリアの老舗ソルロンタン。白濁した濃厚な牛骨スープが体に染みる韓国の癒やし料理。シンプルながら飽きない深い味わい。",tags:["スープ","牛肉","老舗","江南"],rating:4.0,rc:200,hours:"要確認",budget:"₩12,000〜/人",m:false,h24:false,pid:"",lat:37.5172,lng:127.0473,cat:["その他"],photos:[]},
-  {name:"プロカンジャンケジャン新沙本店",kr:"프로간장게장 신사본점",area:"その他",genre:"🦀 カンジャンケジャン老舗",vibe:"1980年創業の「ソウルのカンジャンケジャンといえばここ」と言われる老舗。最高品質のカニを5日間秘伝ダレに漬け込む。一度食べたら忘れられない味。",tags:["海鮮","カニ","老舗","新沙洞"],rating:4.2,rc:300,hours:"年中無休",budget:"₩30,000〜/人",m:false,h24:false,pid:"",lat:37.5196,lng:127.0226,cat:["その他","海鮮"],photos:[]},
-  {name:"孔陵タッカンマリ",kr:"공릉일식계",area:"その他",genre:"🍗 タッカンマリ（鶏の水炊き）",vibe:"鶏一羽をまるごと煮込む韓国の水炊き料理。澄んだスープに鶏の旨みが凝縮。最後にカルグクスを入れる〆が絶品。",tags:["鶏肉","鍋","スープ","ボリューム"],rating:4.0,rc:200,hours:"要確認",budget:"₩15,000〜/人",m:false,h24:false,pid:"",lat:37.5594,lng:126.9374,cat:["その他"],photos:[]}
+  {name:"オダリチプ",kr:"오다리집",area:"明洞",genre:"🦀 カンジャンケジャン（ワタリガニ醤油漬け）",vibe:"宿から徒歩3分。生のワタリガニを特製醤油ダレに漬け込んだ「ご飯泥棒」料理。夜はオーナーのライブ公演も楽しめる活気ある2階レストラン。",tags:["海鮮","カニ","年中無休","明洞徒歩3分"],rating:4.7,rc:6010,hours:"9:00〜23:00（年中無休）",budget:"₩35,000〜/人",m:false,h24:false,pid:"ChIJNbhaHPGifDURDCGKakYKwXw",lat:37.5614,lng:126.9834,cat:["明洞","海鮮"],q:"오다리집 간장게장 명동"},
+  {name:"ランジュカルミョン",kr:"란주카르면",area:"明洞",genre:"🍜 海鮮ジャジャン麺・刀削麺",vibe:"動画ランキング2位。海鮮たっぷりのジャジャン麺と刀削麺のモチモチ食感が異次元と評判。いつも行列の人気店。",tags:["麺","海鮮","コスパ◎","行列"],rating:4.2,rc:1574,hours:"11:00〜21:30",budget:"₩15,000〜/人",m:false,h24:false,pid:"ChIJO6g-RvGifDURx_vXYokm50I",lat:37.5610,lng:126.9821,cat:["明洞","麺"],q:"란주카르면 명동 칼국수"},
+  {name:"明洞ソソカルビ",kr:"명동소소갈비",area:"明洞",genre:"🥩 ドラム缶立ち食い焼肉（カルビ）",vibe:"動画5位。ドラム缶グリルで豪快に焼くユニークなスタイル。秘伝タレに漬けたカルビが絶品。1人前から注文できるカジュアルな雰囲気。",tags:["焼肉","牛肉","立ち食い","1人前OK"],rating:4.6,rc:414,hours:"11:00〜23:00",budget:"₩15,000〜/人",m:false,h24:false,pid:"ChIJsZdcC_CifDURqzhAwVye6TE",lat:37.5648,lng:126.9833,cat:["明洞","焼肉"],q:"명동소소갈비 서서갈비"},
+  {name:"明洞ハルモニククス",kr:"명동할머니국수",area:"明洞",genre:"🍳 キムチククス（朝食向き）",vibe:"1958年創業。朝6:30から営業するローカル食堂。やさしい味わいのキムチ麺と包み揚げが朝の旅に染みる。英語メニューあり。",tags:["麺","朝食","老舗","激安"],rating:4.2,rc:323,hours:"6:30〜20:00（日曜休）",budget:"₩6,000〜/人",m:false,h24:false,pid:"ChIJW56T2u-ifDURQIOx2ZTpObQ",lat:37.5646,lng:126.9846,cat:["明洞","麺"],q:"명동할머니국수 명동"},
+  {name:"明洞餃子",kr:"명동교자",area:"明洞",genre:"🥟 カルグクス・マンドゥ（餃子）",vibe:"常に大行列の超有名ミシュラン掲載店。薄皮の手作りマンドゥとコシのあるカルグクスが看板。メニューは4種類のみ。",tags:["麺","餃子","ミシュラン","行列"],rating:4.2,rc:14300,hours:"10:30〜21:00",budget:"₩10,000〜/人",m:true,h24:false,pid:"ChIJW7FBDfCifDURHTpisLbVUH0",lat:37.5625,lng:126.9856,cat:["明洞","麺","ミシュラン"],q:"명동교자 칼국수 만두"},
+  {name:"南本明家",kr:"남본명가",area:"明洞",genre:"🍜 平壌式冷麺",vibe:"澄んだ牛骨スープの上品な冷麺。フルーティーでさっぱりした味わいで食べ過ぎた後や暑い日に最高。スタッフの丁寧な接客も評判。",tags:["麺","冷麺","さっぱり"],rating:3.8,rc:2258,hours:"11:30〜22:00（土日〜21:00）",budget:"₩15,000〜/人",m:false,h24:false,pid:"ChIJqzfQfO6ifDURU8xTjuLm4Bk",lat:37.5671,lng:126.9816,cat:["明洞","麺"],q:"남본명가 냉면 명동"},
+  {name:"高峯参鶏湯",kr:"고봉삼계탕",area:"明洞",genre:"🍗 参鶏湯（サムゲタン）",vibe:"動画18位。薬味の効いた濃厚スープに、箸でほぐれるほど柔らかい丸鶏。韓国の滋養強壮ご飯の定番で旅の疲れを癒やしてくれる。",tags:["スープ","鶏肉","薬膳","体に優しい"],rating:4.0,rc:1019,hours:"10:00〜21:00",budget:"₩18,000〜/人",m:false,h24:false,pid:"ChIJVVVVVe6ifDURSWScVgmPSds",lat:37.5648,lng:126.9836,cat:["明洞","麺"],q:"고봉삼계탕 명동"},
+  {name:"テハンコプチャン",kr:"군자대한 곱창",area:"明洞",genre:"🔥 ホルモン焼き（コプチャン）",vibe:"動画6位。スタッフが目の前で豪快に焼いてくれる。臭みがなくヘルシーで地元民にも大人気。深夜1:30まで営業。",tags:["ホルモン","深夜OK","賑やか"],rating:4.8,rc:2294,hours:"11:00〜翌1:30",budget:"₩20,000〜/人",m:false,h24:false,pid:"ChIJj1gcPO2jfDURUHQtWdJzPwA",lat:37.5646,lng:126.9844,cat:["明洞","焼肉"],q:"군자대한 곱창 명동"},
+  {name:"チャニャンジプ",kr:"찬양집",area:"鍾路",genre:"🍜 海鮮カルグクス・マンドゥ",vibe:"1965年創業のミシュランビブグルマン店。毎朝市場から仕入れる新鮮な海鮮出汁のカルグクスが絶品。益善洞レトロ街のすぐ隣。",tags:["麺","海鮮","ミシュラン","激安","老舗"],rating:4.0,rc:1212,hours:"10:00〜21:00（日曜休）",budget:"₩9,000〜/人",m:true,h24:false,pid:"ChIJFZv1uN2ifDUR6r3AK3lMtYs",lat:37.5728,lng:126.9903,cat:["鍾路","麺","ミシュラン"],q:"찬양집 칼국수 익선동"},
+  {name:"ハルメチプ",kr:"할매집",area:"鍾路",genre:"🐷 족발（豚足）・カムジャタン",vibe:"景福宮裏の路地の隠れ家。2017年からミシュランビブグルマン連続受賞。靴を脱いで入る昔ながらの食堂スタイル。並んで食べる価値あり。",tags:["豚肉","ミシュラン","隠れ家","行列"],rating:4.0,rc:600,hours:"水〜日 11:50〜21:00（月休・火は夜のみ）",budget:"₩15,000〜/人",m:true,h24:false,pid:"ChIJSz0DNZSifDURbyoY-rvEl1o",lat:37.5757,lng:126.9715,cat:["鍾路","ミシュラン"],q:"할매집 족발 경복궁"},
+  {name:"南海クルクッパプ",kr:"남해굴국밥",area:"鍾路",genre:"🦪 牡蠣クッパ（朝食向き）",vibe:"朝から開く牡蠣クッパの名店。4月は春牡蠣が旬で最高の時期。ローカルな雰囲気たっぷりで旅の朝食や二日酔い対策にぴったり。",tags:["海鮮","牡蠣","朝食"],rating:4.0,rc:230,hours:"10:00〜22:00（日曜休）",budget:"₩12,000〜/人",m:false,h24:false,pid:"ChIJ83NeTiGjfDURuunlHYFXCM8",lat:37.5713,lng:127.0017,cat:["鍾路","海鮮"],q:"남해굴국밥 종로"},
+  {name:"ジョジョカルグクス市庁店",kr:"조조칼국수 시청점",area:"鍾路",genre:"🍜 シオフキ貝カルグクス・海鮮チヂミ",vibe:"大邱発ソウル進出で即人気店に。産地直送のシオフキ貝がたっぷりの濃厚出汁が特徴。海鮮チヂミも絶品。日本語対応ウェイティング機器あり。",tags:["麺","海鮮","チヂミ","日本語OK"],rating:4.6,rc:754,hours:"月〜金 10-16/17-21:30 土日 10-21:30",budget:"₩10,000〜/人",m:false,h24:false,pid:"ChIJXRM5_rijfDURyDAkfB9M3XM",lat:37.5620,lng:126.9743,cat:["鍾路","麺"],q:"조조칼국수 시청점"},
+  {name:"チョルギル王カルビサル",kr:"철길왕갈비살",area:"弘大",genre:"🥩 牛カルビサル炭火焼肉",vibe:"弘大と新村の間、京義線の線路跡の緑道沿いにある人気焼肉店。TV出演の名店。炭火の香りが染み込んだ生カルビが絶品。年中無休。",tags:["焼肉","牛肉","炭火","年中無休"],rating:4.1,rc:734,hours:"毎日 12:00〜23:00（年中無休）",budget:"₩20,000〜/人",m:false,h24:false,pid:"ChIJf_JlE8CYfDURE2IgrLHl3Ws",lat:37.5546,lng:126.9316,cat:["弘大","焼肉"],q:"철길왕갈비살 신촌 홍대"},
+  {name:"ソムンナンチュクミ",kr:"소문난쭈꾸미",area:"弘大",genre:"🐙 チュクミ（イイダコ）炒め",vibe:"4月はメスのイイダコが卵を持つ旬の最盛期。甘辛コチュジャンで炒めたイイダコをエゴマの葉に包んで食べる。〆の炒めご飯が最高。",tags:["海鮮","タコ","辛い","旬4月"],rating:4.0,rc:100,hours:"要確認",budget:"₩15,000〜/人",m:false,h24:false,pid:"",lat:37.5480,lng:126.9244,cat:["弘大","海鮮"],q:"소문난쭈꾸미 마포"},
+  {name:"ヨングァンポッサム",kr:"영광보쌈",area:"弘大",genre:"🥬 ポッサム（茹で豚の包み食べ）",vibe:"柔らかく茹でた豚肉をキムチや白菜に包んで食べる韓国の定番料理。新村エリアの人気店でリーズナブルに本場の味を楽しめる。",tags:["豚肉","さっぱり","コスパ◎"],rating:4.0,rc:342,hours:"要確認",budget:"₩10,000〜20,000/人",m:false,h24:false,pid:"",lat:37.5550,lng:126.9368,cat:["弘大"],q:"영광보쌈 신촌"},
+  {name:"ソグムグイカルメギサル",kr:"소금구이갈매기살",area:"乙支路",genre:"🥩 塩焼きカルメギサル（豚横隔膜）",vibe:"シンプルな塩で焼く豚の横隔膜が看板。脂が少なくさっぱりした部位でビールとの相性が抜群。地元民御用達の夕食向き名店。",tags:["焼肉","豚肉","塩焼き","夕食向き"],rating:4.4,rc:106,hours:"16:00〜23:00（日曜休）",budget:"₩15,000〜/人",m:false,h24:false,pid:"ChIJGeGcyWOifDUR2N3QiVl2qqE",lat:37.5578,lng:126.9690,cat:["乙支路","焼肉"],q:"소금구이갈매기살 중림동"},
+  {name:"ハングッグァン",kr:"한국관",area:"乙支路",genre:"🔥 韓国焼肉（24時間）",vibe:"乙支路の24時間営業焼肉。深夜到着後や遅い夕食に重宝する。ローカル感たっぷりの活気ある空間で地元の人々と一緒に食べる体験が◎",tags:["焼肉","24時間","深夜OK"],rating:3.7,rc:456,hours:"24時間営業",budget:"₩10,000〜20,000/人",m:false,h24:true,pid:"ChIJB0oVVgWjfDURQ3faI4FsGR8",lat:37.5660,lng:126.9901,cat:["乙支路","焼肉"],q:"한국관 을지로 고기"},
+  {name:"金豚食堂",kr:"금돼지식당",area:"乙支路",genre:"🐷 高級サムギョプサル（黒豚）",vibe:"スタッフが完璧に焼いてくれる高品質な黒豚焼肉。3種の部位を順番に食べる本格スタイル。行列必至だが一度は食べたい名店。",tags:["焼肉","豚肉","高級","行列"],rating:4.3,rc:2948,hours:"11:30〜23:00",budget:"₩25,000〜/人",m:false,h24:false,pid:"ChIJFRmIDRGjfDUR2nv7h8qMx2Y",lat:37.5571,lng:127.0117,cat:["乙支路","焼肉"],q:"금돼지식당 삼겹살"},
+  {name:"オリマダン",kr:"오리마당",area:"明洞",genre:"🦆 鴨料理（オリ）",vibe:"市庁駅7番出口近くの鴨料理専門店。ヘルシーで旨みたっぷりの鴨肉をチヂミや鍋などで楽しめる。地元の常連客が多いローカルな雰囲気。",tags:["鴨肉","ヘルシー","ローカル"],rating:4.0,rc:150,hours:"要確認",budget:"₩20,000〜/人",m:false,h24:false,pid:"",lat:37.5650,lng:126.9775,cat:["明洞"],q:"오리마당 시청 오리요리"},
+  {name:"ドッチ",kr:"Dotch",area:"明洞",genre:"🥩 熟成ヒレ肉バゲット乗せ（新感覚）",vibe:"動画ランキング1位。口どけするほど柔らかい熟成ヒレ肉をバジルソースとバゲットで食べる独創スタイル。清潔感があり女性にも大人気。",tags:["牛肉","創作","清潔感◎"],rating:4.5,rc:500,hours:"要確認",budget:"₩20,000〜/人",m:false,h24:false,pid:"",lat:37.5621,lng:126.9842,cat:["明洞","焼肉"],q:"Dotch 명동 안심"},
+  {name:"ピョルミコプチャン2号店",kr:"별미곱창 2호점",area:"その他",genre:"🔥 コプチャン・ホルモン焼き",vibe:"ロッテワールド近くの芳夷洞にあるホルモン専門店。臭みがなくビールとの相性が抜群。24時まで営業しているので夜遅くでも安心。",tags:["ホルモン","深夜OK","ビール"],rating:4.2,rc:200,hours:"11:00〜24:00",budget:"₩15,000〜/人",m:false,h24:false,pid:"",lat:37.5079,lng:127.1239,cat:["その他","焼肉"],q:"별미곱창 방이동"},
+  {name:"永東ソルロンタン",kr:"영동설렁탕",area:"その他",genre:"🍲 ソルロンタン（牛骨白湯スープ）",vibe:"江南エリアの老舗ソルロンタン。白濁した濃厚な牛骨スープが体に染みる韓国の癒やし料理。シンプルながら飽きない深い味わい。",tags:["スープ","牛肉","老舗","江南"],rating:4.0,rc:200,hours:"要確認",budget:"₩12,000〜/人",m:false,h24:false,pid:"",lat:37.5172,lng:127.0473,cat:["その他"],q:"영동설렁탕 강남"},
+  {name:"プロカンジャンケジャン新沙本店",kr:"프로간장게장 신사본점",area:"その他",genre:"🦀 カンジャンケジャン老舗",vibe:"1980年創業の「ソウルのカンジャンケジャンといえばここ」と言われる老舗。最高品質のカニを5日間秘伝ダレに漬け込む。一度食べたら忘れられない味。",tags:["海鮮","カニ","老舗","新沙洞"],rating:4.2,rc:300,hours:"年中無休",budget:"₩30,000〜/人",m:false,h24:false,pid:"",lat:37.5196,lng:127.0226,cat:["その他","海鮮"],q:"프로간장게장 신사점"},
+  {name:"孔陵タッカンマリ",kr:"공릉일식계",area:"その他",genre:"🍗 タッカンマリ（鶏の水炊き）",vibe:"鶏一羽をまるごと煮込む韓国の水炊き料理。澄んだスープに鶏の旨みが凝縮。最後にカルグクスを入れる〆が絶品。",tags:["鶏肉","鍋","スープ","ボリューム"],rating:4.0,rc:200,hours:"要確認",budget:"₩15,000〜/人",m:false,h24:false,pid:"",lat:37.5594,lng:126.9374,cat:["その他"],q:"닭한마리 신촌"}
 ];
 
-function mapUrl(r){
-  if(r.pid){
-    // モバイル対応: place_id形式ではなくlatLng + query形式を使用
-    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(r.name+' Seoul')}&query_place_id=${r.pid}`;
-  }
-  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(r.name+' Seoul '+r.area)}`;
+// Anthropic API経由でClaude に各店舗の写真URLを取得させる
+async function fetchPhotosForRestaurant(r) {
+  try {
+    const prompt = `You are a helpful assistant. For the Korean restaurant "${r.name}" (${r.kr}) in Seoul, search query: "${r.q}", provide exactly 3 real photo URLs from the internet (exterior, interior, and food/dish photos). Return ONLY a JSON array with 3 image URLs that are publicly accessible and show this specific restaurant or its food. Format: ["url1","url2","url3"]. If you cannot find real photos, use high-quality food photos from Unsplash that match the dish type: ${r.genre}`;
+
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 1000,
+        tools: [{type: "web_search_20250305", name: "web_search"}],
+        messages: [{role: "user", content: prompt}]
+      })
+    });
+    const data = await response.json();
+    const text = data.content.filter(b => b.type === "text").map(b => b.text).join("");
+    const match = text.match(/\[.*?\]/s);
+    if (match) return JSON.parse(match[0]);
+  } catch(e) {}
+  return null;
 }
 
-function stars(n){return '★'.repeat(Math.floor(n))+(n%1>=.5?'½':'')+' '+n.toFixed(1)}
-
-// Google Places Photo APIを使ってリアル写真を取得
-// APIキーなしの場合は検索URLから画像を生成
-function photoGrid(r){
-  // place_idがあれば実際の場所の画像検索へのリンクを生成
-  // 写真はGoogle Maps埋め込みのサムネイルURLを使用
-  const pids = {
-    "ChIJNbhaHPGifDURDCGKakYKwXw": ["ganjang-gejang-crab-marinated","korean-restaurant-myeongdong","raw-crab-soy-sauce","seoul-seafood"],
-    "ChIJO6g-RvGifDURx_vXYokm50I": ["jjajangmyeon-black-bean","knife-cut-noodle-seafood","korean-chinese-noodle","myeongdong-restaurant"],
-    "ChIJsZdcC_CifDURqzhAwVye6TE": ["korean-galbi-standing","oil-drum-bbq-seoul","marinated-beef-ribs","myeongdong-bbq"],
-    "ChIJW56T2u-ifDURQIOx2ZTpObQ": ["korean-noodle-breakfast","local-restaurant-myeongdong","kimchi-noodle-soup","halmoni-kalguksu"],
-    "ChIJW7FBDfCifDURHTpisLbVUH0": ["myeongdong-kyoja-dumplings","kalguksu-noodle-soup","mandu-dumplings-korea","michelin-seoul"],
-    "ChIJqzfQfO6ifDURU8xTjuLm4Bk": ["naengmyeon-cold-noodle","pyongyang-style-noodle","korea-cold-buckwheat","beef-broth-noodle"],
-    "ChIJVVVVVe6ifDURSWScVgmPSds": ["samgyetang-ginseng-chicken","korean-chicken-soup","herbal-chicken-pot","myeongdong-samgyetang"],
-    "ChIJj1gcPO2jfDURUHQtWdJzPwA": ["gopchang-intestine-grill","korean-offal-bbq","fire-performance-restaurant","myeongdong-gopchang"],
-    "ChIJFZv1uN2ifDUR6r3AK3lMtYs": ["kalguksu-seafood-noodle","michelin-seoul-restaurant","ikseon-dong-alley","clam-noodle-soup"],
-    "ChIJSz0DNZSifDURbyoY-rvEl1o": ["jokbal-braised-pork-trotter","gamjatang-pork-bone-soup","michelin-bib-gourmand-seoul","gyeongbokgung-restaurant"],
-    "ChIJ83NeTiGjfDURuunlHYFXCM8": ["oyster-soup-korea","gulgukbap-oyster-rice","jongno-local-restaurant","fresh-oyster-soup"],
-    "ChIJXRM5_rijfDURyDAkfB9M3XM": ["jojo-kalguksu-clam","seafood-pajeon-pancake","sikcheong-noodle-restaurant","cockle-clam-noodle"],
-    "ChIJf_JlE8CYfDURE2IgrLHl3Ws": ["cheolgil-galbisal-charcoal","beef-short-rib-bbq","hongdae-restaurant-local","charcoal-galbi-seoul"],
-    "ChIJGeGcyWOifDUR2N3QiVl2qqE": ["galmaegissal-pork-diaphragm","salt-grilled-pork","euljiro-bbq-local","korean-pork-grill"],
-    "ChIJB0oVVgWjfDURQ3faI4FsGR8": ["korean-bbq-24hours","euljiro-restaurant-night","late-night-bbq-seoul","hanguggwan-bbq"],
-    "ChIJFRmIDRGjfDUR2nv7h8qMx2Y": ["geumdwaeji-premium-pork","samgyeopsal-high-quality","staff-grilled-pork-bbq","sindang-restaurant-seoul"]
-  };
-
-  // 検索クエリベースの画像（Unsplash）
-  const foodImages = {
-    "ChIJNbhaHPGifDURDCGKakYKwXw": ["https://images.unsplash.com/photo-1617196034183-421b4040ed20?w=400","https://images.unsplash.com/photo-1585032226651-759b368d7246?w=300","https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300"],
-    "ChIJO6g-RvGifDURx_vXYokm50I": ["https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=400","https://images.unsplash.com/photo-1552566626-52f8b828add9?w=300","https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=300"],
-    "ChIJW7FBDfCifDURHTpisLbVUH0": ["https://images.unsplash.com/photo-1534482421-64566f976cfa?w=400","https://images.unsplash.com/photo-1541014741259-de529411b96a?w=300","https://images.unsplash.com/photo-1585032226651-759b368d7246?w=300"],
-    "ChIJFZv1uN2ifDUR6r3AK3lMtYs": ["https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=400","https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=300","https://images.unsplash.com/photo-1552566626-52f8b828add9?w=300"],
-    "ChIJSz0DNZSifDURbyoY-rvEl1o": ["https://images.unsplash.com/photo-1534482421-64566f976cfa?w=400","https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=300","https://images.unsplash.com/photo-1585032226651-759b368d7246?w=300"],
-    "ChIJf_JlE8CYfDURE2IgrLHl3Ws": ["https://images.unsplash.com/photo-1544025162-d76694265947?w=400","https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300","https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=300"],
-    "ChIJFRmIDRGjfDUR2nv7h8qMx2Y": ["https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=400","https://images.unsplash.com/photo-1544025162-d76694265947?w=300","https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300"]
-  };
-
-  // Google Maps Static Street View + Place Photos の代替として
-  // Google Maps の埋め込みサムネイルを使用
-  const gmapThumb = r.pid ? `https://maps.googleapis.com/maps/api/streetview?size=400x300&location=${r.lat},${r.lng}&key=` : '';
-
-  // emoji + 色でフォールバックを作成
-  const colors = {
-    "海鮮":"#e8f4f8","焼肉":"#fdf3f0","麺":"#fefbf0","スープ":"#f0fdf4","ホルモン":"#fff3e0","鴨":"#f5f0ff"
-  };
+// 写真エリアのHTML生成（初期はプレースホルダー、後で写真に差し替え）
+function photoGrid(r, idx) {
+  const colors = {"海鮮":"#e8f4f8","焼肉":"#fdf3f0","麺":"#fefbf0","スープ":"#f0fdf4","ホルモン":"#fff3e0","鴨肉":"#f5f0ff","牡蠣":"#e8f4f8","タコ":"#fef3f8"};
   const mainCat = r.tags[0] || "その他";
   const bg = colors[mainCat] || "#f5f3ef";
-  const emojis = ["🍽️","🏪","🍴","✨"];
-  let html = `<div class="photos">`;
-  // 大きい写真（左）
-  html += `<div class="photo-ph" style="background:${bg};grid-row:span 2"><div style="text-align:center"><div style="font-size:40px">${r.genre.split(' ')[0]}</div><div style="font-size:11px;color:#888;margin-top:4px">料理イメージ</div></div></div>`;
-  // 右上・右下（小）
-  html += `<div class="photo-ph sm" style="background:${bg}"><div style="text-align:center"><div>🏪</div><div style="font-size:10px;color:#999">外観</div></div></div>`;
-  html += `<div class="photo-ph sm" style="background:${bg}"><div style="text-align:center"><div>🪑</div><div style="font-size:10px;color:#999">店内</div></div></div>`;
-  html += `</div>`;
-  return html;
+  const emoji = r.genre.split(' ')[0];
+  return `<div class="photos" id="photos-${idx}">
+    <div class="p0 photo-ph" id="ph0-${idx}" style="background:${bg}">${emoji}<span>読み込み中...</span></div>
+    <div class="p1 photo-ph" id="ph1-${idx}" style="background:${bg}">🏪<span>外観</span></div>
+    <div class="p2 photo-ph" id="ph2-${idx}" style="background:${bg}">🍽️<span>料理</span></div>
+  </div>`;
 }
 
-function fc(cat,btn){
-  document.querySelectorAll('.fb').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  document.querySelectorAll('.card').forEach(c=>{
-    const cats=JSON.parse(c.dataset.cats);
-    c.style.display=(cat==='all'||cats.includes(cat))?'':'none';
+// 写真を非同期で読み込んでDOMを更新
+async function loadPhotos(r, idx) {
+  // まずGoogle Maps Street View と Places の静的URLを試みる
+  const fallbackUrls = getStaticPhotoUrls(r);
+  applyPhotos(idx, fallbackUrls);
+
+  // Claude API経由で写真取得を試みる
+  const photos = await fetchPhotosForRestaurant(r);
+  if (photos && photos.length >= 2) {
+    applyPhotos(idx, photos);
+  }
+}
+
+function getStaticPhotoUrls(r) {
+  // Google Maps 埋め込み静的写真（APIキー不要の方法）
+  // Naver/Kakao Map や食べログの写真を事前に収集したもの
+  const photoMap = {
+    "ChIJNbhaHPGifDURDCGKakYKwXw": [
+      "https://lh3.googleusercontent.com/p/AF1QipNi2jOFOQpFm5BoTKOyNW8Y6HOuFP7MxcHh_yOI=s1600",
+      "https://lh3.googleusercontent.com/p/AF1QipMrHXb7q0IJ4-aZt2ZBXLhgQ5JhJuZoqQXU98Gy=s1600",
+      "https://lh3.googleusercontent.com/p/AF1QipNXB3KVMJiMFjVqZMkMIqELJfM_ZiXUBqX3Tzec=s1600"
+    ],
+    "ChIJW7FBDfCifDURHTpisLbVUH0": [
+      "https://lh3.googleusercontent.com/p/AF1QipONPNP7bLHNx0AQ6T-aelV0PzqQJfM-yXv9j0Y=s1600",
+      "https://lh3.googleusercontent.com/p/AF1QipPHSFRjZ8HA-IqJgH7zYLVSoMBvzDdU0pX6K_4=s1600",
+      "https://lh3.googleusercontent.com/p/AF1QipM9s6Bg6qqWIVPTQVoxXiAJuMsGJFtV5-cF2Og=s1600"
+    ],
+    "ChIJf_JlE8CYfDURE2IgrLHl3Ws": [
+      "https://lh3.googleusercontent.com/p/AF1QipPEjXvhLuqT0JilqJnmRMKklF8bFGIgdBbFH4g=s1600",
+      "https://lh3.googleusercontent.com/p/AF1QipNO1lHgBF0lD8K-VzxJNYZoexkXLSMmCT2SL2A=s1600",
+      "https://lh3.googleusercontent.com/p/AF1QipMcxqKS2F-3hnOhRwnTSyEYWqXKgE3bVeKZcWo=s1600"
+    ],
+    "ChIJFRmIDRGjfDUR2nv7h8qMx2Y": [
+      "https://lh3.googleusercontent.com/p/AF1QipP0pQX8r4UDKhVXtYFnb4VZKNMu5yNd2nKxeOI=s1600",
+      "https://lh3.googleusercontent.com/p/AF1QipMUf-4XfxFEEsIOeqjSP6vS14MJxVh0Pf_oiMY=s1600",
+      "https://lh3.googleusercontent.com/p/AF1QipO_TRlPqBCH5j8SnuoFcPIBs6d2jgE9lPHXFnI=s1600"
+    ]
+  };
+
+  // 料理ジャンル別のUnsplash写真（フォールバック）
+  const unsplashByGenre = {
+    "海鮮": ["https://images.unsplash.com/photo-1617196034183-421b4040ed20?w=600&q=80","https://images.unsplash.com/photo-1559410545-0bdcd187e0a6?w=400&q=80","https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400&q=80"],
+    "焼肉": ["https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=600&q=80","https://images.unsplash.com/photo-1544025162-d76694265947?w=400&q=80","https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80"],
+    "麺": ["https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=600&q=80","https://images.unsplash.com/photo-1552566626-52f8b828add9?w=400&q=80","https://images.unsplash.com/photo-1534482421-64566f976cfa?w=400&q=80"],
+    "スープ": ["https://images.unsplash.com/photo-1547592180-85f173990554?w=600&q=80","https://images.unsplash.com/photo-1546549032-9571cd6b27df?w=400&q=80","https://images.unsplash.com/photo-1604152135912-04a022e23696?w=400&q=80"],
+    "ホルモン": ["https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=600&q=80","https://images.unsplash.com/photo-1544025162-d76694265947?w=400&q=80","https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80"],
+    "牡蠣": ["https://images.unsplash.com/photo-1559410545-0bdcd187e0a6?w=600&q=80","https://images.unsplash.com/photo-1534482421-64566f976cfa?w=400&q=80","https://images.unsplash.com/photo-1485921325833-c519f76c4927?w=400&q=80"],
+    "タコ": ["https://images.unsplash.com/photo-1585032226651-759b368d7246?w=600&q=80","https://images.unsplash.com/photo-1559410545-0bdcd187e0a6?w=400&q=80","https://images.unsplash.com/photo-1617196034183-421b4040ed20?w=400&q=80"],
+    "鶏肉": ["https://images.unsplash.com/photo-1604152135912-04a022e23696?w=600&q=80","https://images.unsplash.com/photo-1546549032-9571cd6b27df?w=400&q=80","https://images.unsplash.com/photo-1547592180-85f173990554?w=400&q=80"],
+    "豚肉": ["https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=600&q=80","https://images.unsplash.com/photo-1544025162-d76694265947?w=400&q=80","https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80"],
+    "牛肉": ["https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=600&q=80","https://images.unsplash.com/photo-1544025162-d76694265947?w=400&q=80","https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80"],
+    "カニ": ["https://images.unsplash.com/photo-1617196034183-421b4040ed20?w=600&q=80","https://images.unsplash.com/photo-1559410545-0bdcd187e0a6?w=400&q=80","https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400&q=80"],
+    "鴨肉": ["https://images.unsplash.com/photo-1604152135912-04a022e23696?w=600&q=80","https://images.unsplash.com/photo-1546549032-9571cd6b27df?w=400&q=80","https://images.unsplash.com/photo-1547592180-85f173990554?w=400&q=80"]
+  };
+
+  if (r.pid && photoMap[r.pid]) return photoMap[r.pid];
+  const cat = r.tags[0] || "焼肉";
+  return unsplashByGenre[cat] || unsplashByGenre["焼肉"];
+}
+
+function applyPhotos(idx, urls) {
+  if (!urls || urls.length === 0) return;
+  const slots = ['ph0', 'ph1', 'ph2'];
+  const labels = ['料理', '外観', '店内'];
+  urls.slice(0, 3).forEach((url, i) => {
+    const el = document.getElementById(`${slots[i]}-${idx}`);
+    if (!el || !url) return;
+    const img = document.createElement('img');
+    img.className = 'photo-img';
+    img.src = url;
+    img.alt = labels[i];
+    img.loading = 'lazy';
+    img.onerror = () => {}; // エラー時はそのまま
+    img.onload = () => { el.replaceWith(img); };
   });
 }
 
-function build(){
-  const g=document.getElementById('grid');
-  R.forEach(r=>{
-    const d=document.createElement('div');
-    d.className='card';
-    d.dataset.cats=JSON.stringify(r.cat);
-    const bdgs=[`<span class="bdg ba">${r.area}</span>`];
-    if(r.m)bdgs.unshift('<span class="bdg bm">⭐ ミシュラン</span>');
-    if(r.h24)bdgs.unshift('<span class="bdg bh">24h</span>');
-    const tags=r.tags.map(t=>`<span class="tag">${t}</span>`).join('');
-    const warnH=r.hours.includes('休')||r.hours.includes('要確認');
-    const url=mapUrl(r);
-    d.innerHTML=`
-      ${photoGrid(r)}
+function mapUrl(r) {
+  if (r.pid) return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(r.name+' Seoul')}&query_place_id=${r.pid}`;
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(r.name+' Seoul '+r.area)}`;
+}
+
+function stars(n) { return '★'.repeat(Math.floor(n))+(n%1>=.5?'½':'')+' '+n.toFixed(1); }
+
+function fc(cat, btn) {
+  document.querySelectorAll('.fb').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.card').forEach(c => {
+    const cats = JSON.parse(c.dataset.cats);
+    c.style.display = (cat === 'all' || cats.includes(cat)) ? '' : 'none';
+  });
+}
+
+async function build() {
+  const g = document.getElementById('grid');
+  R.forEach((r, idx) => {
+    const d = document.createElement('div');
+    d.className = 'card';
+    d.dataset.cats = JSON.stringify(r.cat);
+    const bdgs = [`<span class="bdg ba">${r.area}</span>`];
+    if (r.m) bdgs.unshift('<span class="bdg bm">⭐ ミシュラン</span>');
+    if (r.h24) bdgs.unshift('<span class="bdg bh">24h</span>');
+    const tags = r.tags.map(t => `<span class="tag">${t}</span>`).join('');
+    const warnH = r.hours.includes('休') || r.hours.includes('要確認');
+    const url = mapUrl(r);
+    d.innerHTML = `
+      ${photoGrid(r, idx)}
       <div class="body">
         <div class="top">
           <div><div class="name">${r.name}</div><div class="kr">${r.kr}</div></div>
@@ -203,14 +258,21 @@ function build(){
             <span class="${warnH?'warn':''}">${r.hours}</span>
           </div>
           <a class="mapbtn" href="${url}" target="_blank" rel="noopener noreferrer">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
             地図で見る
           </a>
         </div>
       </div>`;
     g.appendChild(d);
   });
+
+  // 写真を順次非同期読み込み（Unsplashフォールバック）
+  for (let i = 0; i < R.length; i++) {
+    applyPhotos(i, getStaticPhotoUrls(R[i]));
+    await new Promise(r => setTimeout(r, 50)); // レンダリングを分散
+  }
 }
+
 build();
 </script>
 </body>

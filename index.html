@@ -61,7 +61,7 @@ footer{text-align:center;padding:20px;font-size:11px;color:#999;border-top:1px s
       <h1>🇰🇷 ソウル旅行 レストラン候補</h1>
       <p>2025年4月2日〜5日 ／ 明洞拠点 3泊4日</p>
     </div>
-    <div class="hdr-r"><div>全24店舗</div><a href="https://www.google.com/maps/d/viewer?mid=1&ll=37.563,126.985&z=14" id="mapall" style="color:#c84b2f;text-decoration:none;font-weight:600;cursor:pointer" onclick="openAllMap(event)">📍 地図で全店表示</a></div>
+    <div class="hdr-r"><div>全26店舗</div><a href="https://www.google.com/maps/d/viewer?mid=1&ll=37.563,126.985&z=14" id="mapall" style="color:#c84b2f;text-decoration:none;font-weight:600;cursor:pointer" onclick="openAllMap(event)">📍 地図で全店表示</a></div>
   </div>
 </header>
 <div class="filters">
@@ -109,7 +109,9 @@ const R=[
   {name:"ピョルミコプチャン2号店",kr:"별미곱창 2호점",area:"その他",genre:"🔥 コプチャン・ホルモン焼き",vibe:"ロッテワールド近くの芳夷洞にあるホルモン専門店。臭みがなくビールとの相性が抜群。24時まで営業しているので夜遅くでも安心。",tags:["ホルモン","深夜OK","ビール"],rating:4.2,rc:200,hours:"11:00〜24:00",budget:"₩15,000〜/人",m:false,h24:false,pid:"ChIJiZgo4lSlfDURoDVy7LYzcI8",lat:37.5079,lng:127.1239,cat:["その他","焼肉"],q:"별미곱창 방이동"},
   {name:"永東ソルロンタン",kr:"영동설렁탕",area:"その他",genre:"🍲 ソルロンタン（牛骨白湯スープ）",vibe:"江南エリアの老舗ソルロンタン。白濁した濃厚な牛骨スープが体に染みる韓国の癒やし料理。シンプルながら飽きない深い味わい。",tags:["スープ","牛肉","老舗","江南"],rating:4.0,rc:200,hours:"要確認",budget:"₩12,000〜/人",m:false,h24:false,pid:"ChIJozsev8KjfDURjiTMXj1HkU8",lat:37.5172,lng:127.0473,cat:["その他"],q:"영동설렁탕 강남"},
   {name:"プロカンジャンケジャン新沙本店",kr:"프로간장게장 신사본점",area:"その他",genre:"🦀 カンジャンケジャン老舗",vibe:"1980年創業の「ソウルのカンジャンケジャンといえばここ」と言われる老舗。最高品質のカニを5日間秘伝ダレに漬け込む。一度食べたら忘れられない味。",tags:["海鮮","カニ","老舗","新沙洞"],rating:4.2,rc:300,hours:"年中無休",budget:"₩30,000〜/人",m:false,h24:false,pid:"ChIJ9a16_eejfDUR7G-dMF37LJM",lat:37.5196,lng:127.0226,cat:["その他","海鮮"],q:"프로간장게장 신사점"},
-  {name:"孔陵タッカンマリ",kr:"공릉일식계",area:"その他",genre:"🍗 タッカンマリ（鶏の水炊き）",vibe:"鶏一羽をまるごと煮込む韓国の水炊き料理。澄んだスープに鶏の旨みが凝縮。最後にカルグクスを入れる〆が絶品。",tags:["鶏肉","鍋","スープ","ボリューム"],rating:4.0,rc:200,hours:"要確認",budget:"₩15,000〜/人",m:false,h24:false,pid:"ChIJS43mz5CYfDURnJFHqL5YURY",lat:37.5594,lng:126.9374,cat:["その他"],q:"닭한마리 신촌"}
+  {name:"孔陵タッカンマリ",kr:"공릉일식계",area:"その他",genre:"🍗 タッカンマリ（鶏の水炊き）",vibe:"鶏一羽をまるごと煮込む韓国の水炊き料理。澄んだスープに鶏の旨みが凝縮。最後にカルグクスを入れる〆が絶品。",tags:["鶏肉","鍋","スープ","ボリューム"],rating:4.0,rc:200,hours:"要確認",budget:"₩15,000〜/人",m:false,h24:false,pid:"ChIJS43mz5CYfDURnJFHqL5YURY",lat:37.5594,lng:126.9374,cat:["その他"],q:"닭한마리 신촌"},
+  {name:"木覓山房",kr:"목멱산방",area:"明洞",genre:"🍲 韓定食・伝統料理",vibe:"南山のふもとにある韓屋風レストラン。伝統的な韓国家庭料理を品よく楽しめる。宿から徒歩圏内で落ち着いた雰囲気。",tags:["韓定食","伝統料理","落ち着く","宿近く"],rating:4.0,rc:2097,hours:"11:00〜20:00（年中無休）",budget:"₩15,000〜/人",m:false,h24:false,pid:"ChIJx15N6feifDURmUuQT_G1CAc",lat:37.5581,lng:126.9869,cat:["明洞"],q:"목멱산방 퇴계로"},
+  {name:"ジウカルビ 明洞本店",kr:"지우갈비 명동본점",area:"明洞",genre:"🥩 カルビ焼肉（炭火）",vibe:"明洞エリアの炭火カルビ専門店。宿から徒歩圏内で、本格的な焼肉を楽しめる。",tags:["焼肉","牛肉","炭火","宿近く"],rating:4.6,rc:682,hours:"11:00〜22:30（年中無休）",budget:"₩20,000〜/人",m:false,h24:false,pid:"ChIJYTg4ufCifDUR0VtlVR-tgIc",lat:37.5600,lng:126.9852,cat:["明洞","焼肉"],q:"지우갈비 명동본점"}
 ];
 
 // Google Places API (New) で写真を取得

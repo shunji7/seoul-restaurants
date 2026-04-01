@@ -114,7 +114,7 @@ const R=[
 
 // Google Places API (New) で写真を取得
 const API_KEY = "AIzaSyDZNSPVZ8T-836rYmPmX1gV8zpmDBd-41U";
-const CACHE_KEY = "seoul_photos_v2";
+const CACHE_KEY = "seoul_photos_v3";
 const CACHE_TTL = 7 * 24 * 60 * 60 * 1000; // 7日間キャッシュ（API節約）
 
 function getCache() {
@@ -163,66 +163,13 @@ function photoGrid(r, idx) {
   </div>`;
 }
 
-// 写真を非同期で読み込んでDOMを更新
+// Places APIで写真を取得してDOMに反映
 async function loadPhotos(r, idx) {
-  // まずフォールバック写真を表示
-  const fallbackUrls = getStaticPhotoUrls(r);
-  applyPhotos(idx, fallbackUrls);
-
-  // place_idがある店舗はGoogle Places APIで実写真を取得
-  if (r.pid) {
-    const photos = await fetchPlacePhotos(r.pid);
-    if (photos && photos.length >= 1) {
-      applyPhotos(idx, photos);
-    }
+  if (!r.pid) return;
+  const photos = await fetchPlacePhotos(r.pid);
+  if (photos && photos.length >= 1) {
+    applyPhotos(idx, photos);
   }
-}
-
-function getStaticPhotoUrls(r) {
-  // Google Maps 埋め込み静的写真（APIキー不要の方法）
-  // Naver/Kakao Map や食べログの写真を事前に収集したもの
-  const photoMap = {
-    "ChIJNbhaHPGifDURDCGKakYKwXw": [
-      "https://lh3.googleusercontent.com/p/AF1QipNi2jOFOQpFm5BoTKOyNW8Y6HOuFP7MxcHh_yOI=s1600",
-      "https://lh3.googleusercontent.com/p/AF1QipMrHXb7q0IJ4-aZt2ZBXLhgQ5JhJuZoqQXU98Gy=s1600",
-      "https://lh3.googleusercontent.com/p/AF1QipNXB3KVMJiMFjVqZMkMIqELJfM_ZiXUBqX3Tzec=s1600"
-    ],
-    "ChIJW7FBDfCifDURHTpisLbVUH0": [
-      "https://lh3.googleusercontent.com/p/AF1QipONPNP7bLHNx0AQ6T-aelV0PzqQJfM-yXv9j0Y=s1600",
-      "https://lh3.googleusercontent.com/p/AF1QipPHSFRjZ8HA-IqJgH7zYLVSoMBvzDdU0pX6K_4=s1600",
-      "https://lh3.googleusercontent.com/p/AF1QipM9s6Bg6qqWIVPTQVoxXiAJuMsGJFtV5-cF2Og=s1600"
-    ],
-    "ChIJf_JlE8CYfDURE2IgrLHl3Ws": [
-      "https://lh3.googleusercontent.com/p/AF1QipPEjXvhLuqT0JilqJnmRMKklF8bFGIgdBbFH4g=s1600",
-      "https://lh3.googleusercontent.com/p/AF1QipNO1lHgBF0lD8K-VzxJNYZoexkXLSMmCT2SL2A=s1600",
-      "https://lh3.googleusercontent.com/p/AF1QipMcxqKS2F-3hnOhRwnTSyEYWqXKgE3bVeKZcWo=s1600"
-    ],
-    "ChIJFRmIDRGjfDUR2nv7h8qMx2Y": [
-      "https://lh3.googleusercontent.com/p/AF1QipP0pQX8r4UDKhVXtYFnb4VZKNMu5yNd2nKxeOI=s1600",
-      "https://lh3.googleusercontent.com/p/AF1QipMUf-4XfxFEEsIOeqjSP6vS14MJxVh0Pf_oiMY=s1600",
-      "https://lh3.googleusercontent.com/p/AF1QipO_TRlPqBCH5j8SnuoFcPIBs6d2jgE9lPHXFnI=s1600"
-    ]
-  };
-
-  // 料理ジャンル別のUnsplash写真（フォールバック）
-  const unsplashByGenre = {
-    "海鮮": ["https://images.unsplash.com/photo-1617196034183-421b4040ed20?w=600&q=80","https://images.unsplash.com/photo-1559410545-0bdcd187e0a6?w=400&q=80","https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400&q=80"],
-    "焼肉": ["https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=600&q=80","https://images.unsplash.com/photo-1544025162-d76694265947?w=400&q=80","https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80"],
-    "麺": ["https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=600&q=80","https://images.unsplash.com/photo-1552566626-52f8b828add9?w=400&q=80","https://images.unsplash.com/photo-1534482421-64566f976cfa?w=400&q=80"],
-    "スープ": ["https://images.unsplash.com/photo-1547592180-85f173990554?w=600&q=80","https://images.unsplash.com/photo-1546549032-9571cd6b27df?w=400&q=80","https://images.unsplash.com/photo-1604152135912-04a022e23696?w=400&q=80"],
-    "ホルモン": ["https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=600&q=80","https://images.unsplash.com/photo-1544025162-d76694265947?w=400&q=80","https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80"],
-    "牡蠣": ["https://images.unsplash.com/photo-1559410545-0bdcd187e0a6?w=600&q=80","https://images.unsplash.com/photo-1534482421-64566f976cfa?w=400&q=80","https://images.unsplash.com/photo-1485921325833-c519f76c4927?w=400&q=80"],
-    "タコ": ["https://images.unsplash.com/photo-1585032226651-759b368d7246?w=600&q=80","https://images.unsplash.com/photo-1559410545-0bdcd187e0a6?w=400&q=80","https://images.unsplash.com/photo-1617196034183-421b4040ed20?w=400&q=80"],
-    "鶏肉": ["https://images.unsplash.com/photo-1604152135912-04a022e23696?w=600&q=80","https://images.unsplash.com/photo-1546549032-9571cd6b27df?w=400&q=80","https://images.unsplash.com/photo-1547592180-85f173990554?w=400&q=80"],
-    "豚肉": ["https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=600&q=80","https://images.unsplash.com/photo-1544025162-d76694265947?w=400&q=80","https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80"],
-    "牛肉": ["https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=600&q=80","https://images.unsplash.com/photo-1544025162-d76694265947?w=400&q=80","https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80"],
-    "カニ": ["https://images.unsplash.com/photo-1617196034183-421b4040ed20?w=600&q=80","https://images.unsplash.com/photo-1559410545-0bdcd187e0a6?w=400&q=80","https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400&q=80"],
-    "鴨肉": ["https://images.unsplash.com/photo-1604152135912-04a022e23696?w=600&q=80","https://images.unsplash.com/photo-1546549032-9571cd6b27df?w=400&q=80","https://images.unsplash.com/photo-1547592180-85f173990554?w=400&q=80"]
-  };
-
-  if (r.pid && photoMap[r.pid]) return photoMap[r.pid];
-  const cat = r.tags[0] || "焼肉";
-  return unsplashByGenre[cat] || unsplashByGenre["焼肉"];
 }
 
 function applyPhotos(idx, urls) {
@@ -339,11 +286,7 @@ async function build() {
     g.appendChild(d);
   });
 
-  // 写真を順次非同期読み込み（まずフォールバック → Places APIで差し替え）
-  for (let i = 0; i < R.length; i++) {
-    applyPhotos(i, getStaticPhotoUrls(R[i]));
-  }
-  // place_idがある店舗はPlaces APIで実写真を取得（3件ずつ並列）
+  // Places APIで各店舗の実写真を取得（3件ずつ並列）
   for (let i = 0; i < R.length; i += 3) {
     const batch = R.slice(i, i + 3).map((r, j) => loadPhotos(r, i + j));
     await Promise.all(batch);

@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ソウル旅行 レストラン候補 2025.4</title>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZNSPVZ8T-836rYmPmX1gV8zpmDBd-41U&callback=Function.prototype" async defer></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;background:#f5f3ef;color:#1a1a18;min-height:100vh}
@@ -21,7 +22,7 @@ header p{font-size:11px;color:#888;margin-top:2px}
 .photos{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:130px 110px;gap:2px;background:#e8e6e0;position:relative}
 .photos .p0{grid-row:span 2;height:100%;width:100%}
 .photos .p1,.photos .p2{height:100%;width:100%}
-.photo-img{width:100%;height:100%;object-fit:cover;display:block;background:#ede9e1}
+.photo-img,.p0 .photo-img,.p1 .photo-img,.p2 .photo-img{width:100%;height:100%;object-fit:cover;display:block;background:#ede9e1}
 .photo-ph{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#ede9e1;font-size:32px;gap:4px}
 .photo-ph span{font-size:10px;color:#aaa}
 .body{padding:14px}
@@ -46,6 +47,11 @@ header p{font-size:11px;color:#888;margin-top:2px}
 .mapbtn svg{width:13px;height:13px;fill:#fff;flex-shrink:0}
 footer{text-align:center;padding:20px;font-size:11px;color:#999;border-top:1px solid #e8e6e0;background:#fff}
 @media(max-width:480px){.grid{grid-template-columns:1fr}}
+.map-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:1000;background:rgba(0,0,0,.5)}
+.map-overlay.show{display:block}
+.map-wrap{position:absolute;top:5%;left:5%;right:5%;bottom:5%;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.3)}
+.map-close{position:absolute;top:12px;right:12px;z-index:1001;background:#fff;border:none;border-radius:50%;width:36px;height:36px;font-size:20px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.2);display:flex;align-items:center;justify-content:center}
+#leafmap{width:100%;height:100%}
 </style>
 </head>
 <body>
@@ -55,7 +61,7 @@ footer{text-align:center;padding:20px;font-size:11px;color:#999;border-top:1px s
       <h1>🇰🇷 ソウル旅行 レストラン候補</h1>
       <p>2025年4月2日〜5日 ／ 明洞拠点 3泊4日</p>
     </div>
-    <div class="hdr-r"><div>全24店舗</div><div>タップ → Googleマップで見る</div></div>
+    <div class="hdr-r"><div>全24店舗</div><a href="https://www.google.com/maps/d/viewer?mid=1&ll=37.563,126.985&z=14" id="mapall" style="color:#c84b2f;text-decoration:none;font-weight:600;cursor:pointer" onclick="openAllMap(event)">📍 地図で全店表示</a></div>
   </div>
 </header>
 <div class="filters">
@@ -70,6 +76,12 @@ footer{text-align:center;padding:20px;font-size:11px;color:#999;border-top:1px s
   <button class="fb" onclick="fc('ミシュラン',this)">⭐ ミシュラン</button>
 </div>
 <div class="grid" id="grid"></div>
+<div class="map-overlay" id="mapOverlay" onclick="if(event.target===this)closeMap()">
+  <div class="map-wrap">
+    <button class="map-close" onclick="closeMap()">✕</button>
+    <div id="leafmap"></div>
+  </div>
+</div>
 <footer>Google マップ情報をもとに作成。営業時間は変更になる場合があります。現地ではNaverマップもご確認ください。</footer>
 
 <script>
@@ -225,9 +237,53 @@ function applyPhotos(idx, urls) {
     img.src = url;
     img.alt = labels[i];
     img.loading = 'lazy';
-    img.onerror = () => {}; // エラー時はそのまま
-    img.onload = () => { el.replaceWith(img); };
+    img.onerror = () => {};
+    // divの中身を差し替え（IDは保持）
+    img.onload = () => {
+      el.innerHTML = '';
+      el.className = el.className.replace('photo-ph','');
+      el.style.background = 'none';
+      el.appendChild(img);
+    };
   });
+}
+
+let gMap = null;
+function openAllMap(e) {
+  e.preventDefault();
+  const ov = document.getElementById('mapOverlay');
+  ov.classList.add('show');
+  if (!gMap) {
+    gMap = new google.maps.Map(document.getElementById('leafmap'), {
+      center: {lat: 37.563, lng: 126.985}, zoom: 13, mapId: 'seoul_restaurants'
+    });
+    // 宿泊先（Airbnb）
+    const homeMarker = new google.maps.Marker({
+      position: {lat: 37.5598, lng: 126.9858}, map: gMap,
+      icon: {path: google.maps.SymbolPath.CIRCLE, scale: 10, fillColor: '#2563eb', fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2},
+      title: '🏠 宿泊先'
+    });
+    const homeInfo = new google.maps.InfoWindow({content: '<b>🏠 Airbnb 宿泊先</b><br>南山洞2街 302B<br>明洞駅3番出口すぐ'});
+    homeMarker.addListener('click', () => homeInfo.open(gMap, homeMarker));
+    // エリア別ピン色
+    const pinColors = {"明洞":"#c84b2f","鍾路":"#1a5fa8","弘大":"#7c3aed","乙支路":"#b45309","その他":"#666"};
+    R.forEach(r => {
+      const c = pinColors[r.area] || pinColors["その他"];
+      const marker = new google.maps.Marker({
+        position: {lat: r.lat, lng: r.lng}, map: gMap,
+        icon: {path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW, scale: 6, fillColor: c, fillOpacity: 1, strokeColor: '#fff', strokeWeight: 1.5},
+        title: r.name
+      });
+      const info = new google.maps.InfoWindow({
+        content: `<div style="font-size:13px"><b>${r.name}</b>（${r.kr}）<br>${r.genre}<br>${r.budget}<br><a href="${mapUrl(r)}" target="_blank" style="color:#1a73e8">Googleマップで開く →</a></div>`
+      });
+      marker.addListener('click', () => info.open(gMap, marker));
+    });
+  }
+  setTimeout(() => google.maps.event.trigger(gMap, 'resize'), 100);
+}
+function closeMap() {
+  document.getElementById('mapOverlay').classList.remove('show');
 }
 
 function mapUrl(r) {

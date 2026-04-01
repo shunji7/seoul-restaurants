@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ソウル旅行 レストラン候補 2025.4</title>
+<style>
+  :root {
+    --bg: #fafaf8;
+    --surface: #ffffff;
+    --border: #e8e6e0;
+    --text: #1a1a18;
+    --muted: #6b6b68;
+    --accent: #c84b2f;
+    --tag-bg: #f2f0ea;
+    --michelin: #1a5fa8;
+    --michelin-bg: #e8f0fa;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, 'Hiragino Sans', 'Yu Gothic', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 20px 24px; position: sticky; top: 0; z-index: 100; }
+  .header-inner { max-width: 960px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  header h1 { font-size: 17px; font-weight: 600; letter-spacing: -0.3px; }
+  header p { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .header-meta { font-size: 12px; color: var(--muted); text-align: right; }
+
+  .filters { max-width: 960px; margin: 20px auto 0; padding: 0 16px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .filter-btn { font-size: 12px; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); color: var(--muted); cursor: pointer; transition: all 0.15s; }
+  .filter-btn:hover, .filter-btn.active { background: var(--text); color: #fff; border-color: var(--text); }
+
+  .grid { max-width: 960px; margin: 20px auto 60px; padding: 0 16px; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; transition: box-shadow 0.2s, transform 0.2s; }
+  .card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); transform: translateY(-2px); }
+
+  .card-img { width: 100%; height: 160px; object-fit: cover; background: #e8e6e0; display: block; }
+  .card-img-placeholder { width: 100%; height: 160px; background: linear-gradient(135deg, #f0ede5, #e0ddd5); display: flex; align-items: center; justify-content: center; font-size: 36px; }
+
+  .card-body { padding: 14px; }
+  .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+  .card-name { font-size: 15px; font-weight: 600; line-height: 1.3; }
+  .card-kr { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .badges { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; flex-shrink: 0; }
+  .badge { font-size: 10px; font-weight: 600; padding: 3px 7px; border-radius: 6px; white-space: nowrap; }
+  .badge-michelin { background: var(--michelin-bg); color: var(--michelin); }
+  .badge-24h { background: #e8f5e9; color: #2e7d32; }
+  .badge-area { background: var(--tag-bg); color: var(--muted); }
+
+  .card-genre { font-size: 13px; color: var(--text); margin-bottom: 6px; font-weight: 500; }
+  .card-vibe { font-size: 12px; color: var(--muted); line-height: 1.6; margin-bottom: 10px; }
+
+  .card-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 10px; }
+  .tag { font-size: 10px; padding: 3px 8px; border-radius: 6px; background: var(--tag-bg); color: #555; }
+
+  .card-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 10px; border-top: 1px solid var(--border); }
+  .card-info { font-size: 11px; color: var(--muted); }
+  .card-info span { display: block; }
+  .card-info .warn { color: #b45309; }
+  .map-btn { display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; color: var(--accent); text-decoration: none; padding: 6px 10px; border: 1px solid #f0cfc7; border-radius: 8px; transition: background 0.15s; }
+  .map-btn:hover { background: #fdf3f0; }
+  .map-btn svg { width: 12px; height: 12px; }
+
+  .stars { color: #f59e0b; font-size: 11px; }
+  .rating-count { color: var(--muted); font-size: 10px; }
+
+  footer { text-align: center; padding: 24px; font-size: 11px; color: var(--muted); border-top: 1px solid var(--border); background: var(--surface); }
+
+  @media (max-width: 480px) {
+    .grid { grid-template-columns: 1fr; }
+    header h1 { font-size: 15px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div>
+      <h1>🇰🇷 ソウル旅行 レストラン候補</h1>
+      <p>2025年4月2日〜5日 ／ 明洞拠点 3泊4日</p>
+    </div>
+    <div class="header-meta">
+      <div>全24店舗</div>
+      <div>気になるお店を家族でシェアしよう</div>
+    </div>
+  </div>
+</header>
+
+<div class="filters">
+  <button class="filter-btn active" onclick="filterCards('all',this)">すべて</button>
+  <button class="filter-btn" onclick="filterCards('明洞',this)">🏙 明洞</button>
+  <button class="filter-btn" onclick="filterCards('鍾路',this)">🏯 鍾路・益善洞</button>
+  <button class="filter-btn" onclick="filterCards('弘大',this)">🎵 弘大・新村</button>
+  <button class="filter-btn" onclick="filterCards('乙支路',this)">🍺 乙支路</button>
+  <button class="filter-btn" onclick="filterCards('焼肉',this)">🥩 焼肉系</button>
+  <button class="filter-btn" onclick="filterCards('麺',this)">🍜 麺・スープ系</button>
+  <button class="filter-btn" onclick="filterCards('海鮮',this)">🦀 海鮮系</button>
+  <button class="filter-btn" onclick="filterCards('ミシュラン',this)">⭐ ミシュラン</button>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<footer>
+  このリストはGoogleマップの情報をもとに作成しました。営業時間は変更になる場合があります。<br>
+  旅行前にNaverマップでも確認することをおすすめします。
+</footer>
+
+<script>
+const restaurants = [
+  {
+    name: "オダリチプ",
+    kr: "오다리집",
+    area: "明洞",
+    genre: "🦀 カンジャンケジャン（ワタリガニ醤油漬け）",
+    vibe: "宿から徒歩3分の絶好立地。生のワタリガニを特製醤油ダレに漬け込んだ「ご飯泥棒」メニュー。夜はオーナーのライブ公演も楽しめる。",
+    tags: ["海鮮","カニ","年中無休","明洞徒歩3分"],
+    rating: 4.7, ratingCount: 6010,
+    hours: "9:00〜23:00（年中無休）",
+    budget: "₩35,000〜/人",
+    michelin: false, h24: false,
+    mapId: "ChIJNbhaHPGifDURDCGKakYKwXw",
+    emoji: "🦀",
+    cat: ["明洞","海鮮"]
+  },
+  {
+    name: "ランジュカルミョン",
+    kr: "란주카르면",
+    area: "明洞",
+    genre: "🍜 海鮮ジャジャン麺・刀削麺（트러플소스）",
+    vibe: "動画ランキング2位。海鮮たっぷりのジャジャン麺と刀削麺のモチモチ食感が異次元と評判。行列必至の人気店。",
+    tags: ["麺","海鮮","コスパ◎","行列"],
+    rating: 4.2, ratingCount: 1574,
+    hours: "11:00〜21:30",
+    budget: "₩15,000〜/人",
+    michelin: false, h24: false,
+    mapId: "ChIJO6g-RvGifDURx_vXYokm50I",
+    emoji: "🍜",
+    cat: ["明洞","麺"]
+  },
+  {
+    name: "明洞ソソカルビ",
+    kr: "명동소소갈비",
+    area: "明洞",
+    genre: "🥩 ドラム缶立ち食い焼肉（カルビ）",
+    vibe: "動画5位。ドラム缶のグリルで豪快に焼くスタイルが話題。秘伝タレに漬け込んだカルビを1人前から注文できるカジュアルな名店。",
+    tags: ["焼肉","牛肉","立ち食い","1人前OK"],
+    rating: 4.6, ratingCount: 414,
+    hours: "11:00〜23:00",
+    budget: "₩15,000〜/人",
+    michelin: false, h24: false,
+    mapId: "ChIJsZdcC_CifDURqzhAwVye6TE",
+    emoji: "🥩",
+    cat: ["明洞","焼肉"]
+  },
+  {
+    name: "明洞ハルモニククス",
+    kr: "명동할머니국수",
+    area: "明洞",
+    genre: "🍜 キムチククス・キムマリ（朝食向き）",
+    vibe: "朝6:30から営業するローカル食堂。1958年創業の老舗。キムチとスープが体に染みる優しい味で、旅の朝食に最適。英語メニューあり。",
+    tags: ["麺","朝食","老舗","激安"],
+    rating: 4.2, ratingCount: 323,
+    hours: "6:30〜20:00（日曜休）",
+    budget: "₩6,000〜/人",
+    michelin: false, h24: false,
+    mapId: "ChIJW56T2u-ifDURQIOx2ZTpObQ",
+    emoji: "🍳",
+    cat: ["明洞","麺"]
+  },
+  {
+    name: "明洞餃子",
+    kr: "명동교자",
+    area: "明洞",
+    genre: "🥟 カルグクス・マンドゥ（餃子）",
+    vibe: "常に大行列の超有名店。薄皮のマンドゥとコシのあるカルグクスが看板。ミシュラン掲載店。4品しかなく潔いシンプルさも魅力。",
+    tags: ["麺","餃子","ミシュラン","行列"],
+    rating: 4.2, ratingCount: 14301,
+    hours: "10:30〜21:00",
+    budget: "₩10,000〜/人",
+    michelin: true, h24: false,
+    mapId: "ChIJW7FBDfCifDURHTpisLbVUH0",
+    emoji: "🥟",
+    cat: ["明洞","麺","ミシュラン"]
+  },
+  {
+    name: "南本明家",
+    kr: "남본명가",
+    area: "明洞",
+    genre: "🍜 平壌式冷麺（ナengミョン）",
+    vibe: "動画9位。澄んだ牛骨スープの上品な冷麺。フルーティーでさっぱりした味わいは暑い日や食べ過ぎた後に最高。スタッフが親切。",
+    tags: ["麺","冷麺","スープ","さっぱり"],
+    rating: 3.8, ratingCount: 2258,
+    hours: "11:30〜22:00（土・日〜21:00）",
+    budget: "₩15,000〜/人",
+    michelin: false, h24: false,
+    mapId: "ChIJqzfQfO6ifDURU8xTjuLm4Bk",
+    emoji: "🍜",
+    cat: ["明洞","麺"]
+  },
+  {
+    name: "高峯参鶏湯",
+    kr: "고봉삼계탕",
+    area: "明洞",
+    genre: "🍗 参鶏湯（サムゲタン）",
+    vibe: "動画18位。薬味の効いた濃厚スープに、箸でほぐれるほど柔らかい鶏肉。韓国の滋養強壮ご飯の定番。冬〜春に特においしい。",
+    tags: ["スープ","鶏肉","薬膳","体に優しい"],
+    rating: 4.0, ratingCount: 1019,
+    hours: "10:00〜21:00",
+    budget: "₩18,000〜/人",
+    michelin: false, h24: false,
+    mapId: "ChIJVVVVVe6ifDURSWScVgmPSds",
+    emoji: "🍗",
+    cat: ["明洞","麺"]
+  },
+  {
+    name: "テハンコプチャン（君子大韓）",
+    kr: "군자대한 곱창",
+    area: "明洞",
+    genre: "🔥 ホルモン焼き（コプチャン）",
+    vibe: "動画6位。火柱が上がるパフォーマンスが楽しい！スタッフが焼いてくれるので安心。臭みがなくヘルシーで、地元の人にも大人気。",
+    tags: ["ホルモン","パフォーマンス","深夜OK","賑やか"],
+    rating: 4.8, ratingCount: 2294,
+    hours: "11:00〜翌1:30",
+    budget: "₩20,000〜/人",
+    michelin: false, h24: false,
+    mapId: "ChIJj1gcPO2jfDURUHQtWdJzPwA",
+    emoji: "🔥",
+    cat: ["明洞","焼肉"]
+  },
+  {
+    name: "チャニャンジプ",
+    kr: "찬양집",
+    area: "鍾路",
+    genre: "🍜 海鮮カルグクス・マンドゥ",
+    vibe: "1965年創業のミシュランビブグルマン店。毎朝市場から仕入れる新鮮な海鮮出汁のカルグクスが絶品。益善洞のレトロ街のすぐ隣。",
+    tags: ["麺","海鮮","ミシュラン","激安","老舗"],
+    rating: 4.0, ratingCount: 1212,
+    hours: "10:00〜21:00（日曜休）",
+    budget: "₩9,000〜/人",
+    michelin: true, h24: false,
+    mapId: "ChIJFZv1uN2ifDUR6r3AK3lMtYs",
+    emoji: "🍜",
+    cat: ["鍾路","麺","ミシュラン"]
+  },
+  {
+    name: "ハルメチプ",
+    kr: "할매집",
+    area: "鍾路",
+    genre: "🐷 족발（豚足）・감자탕（骨付き豚スープ）",
+    vibe: "景福宮裏の路地の隠れ家。2017年からミシュランビブグルマン連続受賞。靴を脱いで入る昔ながらの食堂スタイル。並んで食べる価値あり。",
+    tags: ["豚肉","ミシュラン","老舗","隠れ家","行列"],
+    rating: 4.0, ratingCount: 600,
+    hours: "水〜日 11:50〜21:00（月曜休・火はDinnerのみ）",
+    budget: "₩15,000〜/人",
+    michelin: true, h24: false,
+    mapId: "ChIJSz0DNZSifDURbyoY-rvEl1o",
+    emoji: "🐷",
+    cat: ["鍾路","ミシュラン"]
+  },
+  {
+    name: "南海クルクッパプ",
+    kr: "남해굴국밥",
+    area: "鍾路",
+    genre: "🦪 牡蠣クッパ（굴국밥）",
+    vibe: "朝5時から開店する牡蠣クッパの名店。4月は春の牡蠣が旬で最高。ローカルな雰囲気たっぷり。朝食や二日酔いの朝にぴったり。",
+    tags: ["海鮮","牡蠣","朝食","早朝OK"],
+    rating: 4.0, ratingCount: 230,
+    hours: "10:00〜22:00（日曜休）",
+    budget: "₩12,000〜/人",
+    michelin: false, h24: false,
+    mapId: "ChIJ83NeTiGjfDURuunlHYFXCM8",
+    emoji: "🦪",
+    cat: ["鍾路","海鮮"]
+  },
+  {
+    name: "ジョジョカルグクス市庁店",
+    kr: "조조칼국수 시청점",
+    area: "鍾路",
+    genre: "🍜 シオフキ貝カルグクス・海鮮チヂミ",
+    vibe: "大邱発ソウル進出で即人気店に。産地直送のシオフキ貝がたっぷりの濃厚出汁が特徴。海鮮チヂミも絶品。日本語対応ウェイティング機器あり。",
+    tags: ["麺","海鮮","チヂミ","日本語OK"],
+    rating: 4.6, ratingCount: 754,
+    hours: "月〜金 10-16/17-21:30 土日 10-21:30",
+    budget: "₩10,000〜/人",
+    michelin: false, h24: false,
+    mapId: "ChIJXRM5_rijfDURyDAkfB9M3XM",
+    emoji: "🍜",
+    cat: ["鍾路","麺"]
+  },
+  {
+    name: "チョルギル王カルビサル",
+    kr: "철길왕갈비살",
+    area: "弘大",
+    genre: "🥩 牛カルビサル炭火焼肉",
+    vibe: "弘大と新村の間、京義線の線路跡の緑道沿いにある人気焼肉店。TV「맛있는 녀석들」出演の名店。生カルビは炭火の香りがたっぷり。",
+    tags: ["焼肉","牛肉","炭火","年中無休"],
+    rating: 4.1, ratingCount: 734,
+    hours: "毎日 12:00〜23:00（年中無休）",
+    budget: "₩20,000〜/人",
+    michelin: false, h24: false,
+    mapId: "ChIJf_JlE8CYfDURE2IgrLHl3Ws",
+    emoji: "🥩",
+    cat: ["弘大","焼肉"]
+  },
+  {
+    name: "ソムンナンチュクミ",
+    kr: "소문난쭈꾸미",
+    area: "弘大",
+    genre: "🐙 チュクミ（イイダコ）炒め",
+    vibe: "4月はメスのイイダコが卵を持つ旬の季節。甘辛コチュジャンで炒めたイイダコをエゴマの葉に包んで食べる。〆の炒めご飯が絶品。",
+    tags: ["海鮮","タコ","辛い","旬4月"],
+    rating: 4.0, ratingCount: 100,
+    hours: "要確認",
+    budget: "₩15,000〜/人",
+    michelin: false, h24: false,
+    mapId: "",
+    emoji: "🐙",
+    cat: ["弘大","海鮮"]
+  },
+  {
+    name: "ヨングァンポッサム",
+    kr: "영광보쌈",
+    area: "弘大",
+    genre: "🥬 ポッサム（茹で豚の包み食べ）",
+    vibe: "柔らかく茹でた豚肉をキムチや白菜に包んで食べる韓国の定番料理。新村エリアの人気店でリーズナブルに本場の味を楽しめる。",
+    tags: ["豚肉","さっぱり","コスパ◎"],
+    rating: 4.0, ratingCount: 342,
+    hours: "要確認",
+    budget: "₩10,000〜20,000/人",
+    michelin: false, h24: false,
+    mapId: "",
+    emoji: "🥬",
+    cat: ["弘大"]
+  },
+  {
+    name: "ソグムグイカルメギサル",
+    kr: "소금구이갈매기살",
+    area: "乙支路",
+    genre: "🥩 塩焼きカルメギサル（豚横隔膜）",
+    vibe: "シンプルな塩で焼く豚の横隔膜が看板。脂が少なくさっぱりした部位で、ビールとの相性が抜群。地元民御用達の夕食向き名店。",
+    tags: ["焼肉","豚肉","塩焼き","夕食向き"],
+    rating: 4.4, ratingCount: 106,
+    hours: "16:00〜23:00（日曜休）",
+    budget: "₩15,000〜/人",
+    michelin: false, h24: false,
+    mapId: "ChIJGeGcyWOifDUR2N3QiVl2qqE",
+    emoji: "🥩",
+    cat: ["乙支路","焼肉"]
+  },
+  {
+    name: "ハングッグァン",
+    kr: "한국관",
+    area: "乙支路",
+    genre: "🔥 韓国焼肉（24時間営業）",
+    vibe: "乙支路の24時間営業焼肉。深夜到着後や遅い夕食に重宝する。ローカル感たっぷりの活気ある空間。牛肉と豚肉どちらも楽しめる。",
+    tags: ["焼肉","24時間","深夜OK","ローカル"],
+    rating: 3.7, ratingCount: 456,
+    hours: "24時間営業",
+    budget: "₩10,000〜20,000/人",
+    michelin: false, h24: true,
+    mapId: "ChIJB0oVVgWjfDURQ3faI4FsGR8",
+    emoji: "🔥",
+    cat: ["乙支路","焼肉"]
+  },
+  {
+    name: "金豚食堂（クムトゥェジ）",
+    kr: "금돼지식당",
+    area: "乙支路",
+    genre: "🐷 高級サムギョプサル（黒豚）",
+    vibe: "スタッフが完璧に焼いてくれる高品質な豚肉の焼肉。3種の部位を順番に食べる本格スタイル。行列必至だが一度は食べたい名店。",
+    tags: ["焼肉","豚肉","高級","スタッフ焼き","行列"],
+    rating: 4.3, ratingCount: 2948,
+    hours: "11:30〜23:00",
+    budget: "₩25,000〜/人",
+    michelin: false, h24: false,
+    mapId: "ChIJFRmIDRGjfDUR2nv7h8qMx2Y",
+    emoji: "🐷",
+    cat: ["乙支路","焼肉"]
+  },
+  {
+    name: "オリマダン",
+    kr: "오리마당",
+    area: "明洞",
+    genre: "🦆 鴨料理（オリ）",
+    vibe: "市庁駅7番出口近くの鴨料理専門店。ヘルシーで旨みたっぷりの鴨肉をチヂミや鍋などで楽しめる。地元の常連客が多いローカルな雰囲気。",
+    tags: ["鴨肉","ヘルシー","ローカル"],
+    rating: 4.0, ratingCount: 150,
+    hours: "要確認",
+    budget: "₩20,000〜/人",
+    michelin: false, h24: false,
+    mapId: "",
+    emoji: "🦆",
+    cat: ["明洞"]
+  },
+  {
+    name: "ドッチ",
+    kr: "Dotch",
+    area: "明洞",
+    genre: "🥩 熟成ヒレ肉バゲット乗せ（新感覚スタイル）",
+    vibe: "動画ランキング1位の超イチ推し店。柔らかい熟成ヒレ肉をバジルソースとともにバゲットに乗せて食べる独創スタイル。清潔感があり女性にも人気。",
+    tags: ["牛肉","創作料理","清潔感◎","コスパ◎"],
+    rating: 4.5, ratingCount: 500,
+    hours: "要確認",
+    budget: "₩20,000〜/人",
+    michelin: false, h24: false,
+    mapId: "",
+    emoji: "🥩",
+    cat: ["明洞","焼肉"]
+  },
+  {
+    name: "ピョルミコプチャン2号店",
+    kr: "별미곱창 2호점",
+    area: "その他",
+    genre: "🔥 コプチャン・ホルモン焼き",
+    vibe: "ロッテワールド近くの芳夷洞にあるホルモン専門店。臭みがなく、ビールとの相性が抜群。24時まで営業しているので夜遅くでも安心。",
+    tags: ["ホルモン","深夜OK","ビール"],
+    rating: 4.2, ratingCount: 200,
+    hours: "11:00〜24:00",
+    budget: "₩15,000〜/人",
+    michelin: false, h24: false,
+    mapId: "",
+    emoji: "🔥",
+    cat: ["その他","焼肉"]
+  },
+  {
+    name: "永東ソルロンタン",
+    kr: "영동설렁탕",
+    area: "その他",
+    genre: "🍲 ソルロンタン（牛骨白湯スープ）",
+    vibe: "江南エリアの老舗ソルロンタン。白濁した濃厚な牛骨スープが体に染みる韓国の癒やし料理。シンプルながら飽きない深い味わい。",
+    tags: ["スープ","牛肉","老舗","江南"],
+    rating: 4.0, ratingCount: 200,
+    hours: "要確認",
+    budget: "₩12,000〜/人",
+    michelin: false, h24: false,
+    mapId: "",
+    emoji: "🍲",
+    cat: ["その他"]
+  },
+  {
+    name: "プロカンジャンケジャン新沙本店",
+    kr: "프로간장게장 신사본점",
+    area: "その他",
+    genre: "🦀 カンジャンケジャン（老舗）",
+    vibe: "1980年創業の「ソウルのカンジャンケジャンといえばここ」と言われる老舗。最高品質のカニを5日間秘伝ダレに漬け込む。一度食べたら忘れられない味。",
+    tags: ["海鮮","カニ","老舗","新沙洞"],
+    rating: 4.2, ratingCount: 300,
+    hours: "年中無休",
+    budget: "₩30,000〜/人",
+    michelin: false, h24: false,
+    mapId: "",
+    emoji: "🦀",
+    cat: ["その他","海鮮"]
+  },
+  {
+    name: "孔陵タッカンマリ",
+    kr: "공릉일식계",
+    area: "その他",
+    genre: "🍗 タッカンマリ（鶏の水炊き）",
+    vibe: "鶏一羽をまるごと煮込む韓国の水炊き料理。澄んだスープに鶏の旨みが凝縮。付け合わせのカルグクスを最後に入れる〆が絶品。",
+    tags: ["鶏肉","鍋","スープ","ボリューム"],
+    rating: 4.0, ratingCount: 200,
+    hours: "要確認",
+    budget: "₩15,000〜/人",
+    michelin: false, h24: false,
+    mapId: "",
+    emoji: "🍗",
+    cat: ["その他"]
+  }
+];
+
+function renderStars(rating) {
+  const full = Math.floor(rating);
+  const half = rating - full >= 0.5 ? 1 : 0;
+  return '★'.repeat(full) + (half ? '½' : '') + ' ' + rating.toFixed(1);
+}
+
+function getMapUrl(placeId, name) {
+  if (placeId) {
+    return `https://www.google.com/maps/place/?q=place_id:${placeId}`;
+  }
+  return `https://www.google.com/maps/search/${encodeURIComponent(name + ' Seoul')}`;
+}
+
+function filterCards(cat, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.card').forEach(card => {
+    const cats = JSON.parse(card.dataset.cats);
+    if (cat === 'all' || cats.includes(cat)) {
+      card.style.display = '';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+
+function buildGrid() {
+  const grid = document.getElementById('grid');
+  restaurants.forEach(r => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.dataset.cats = JSON.stringify(r.cat);
+    const mapUrl = getMapUrl(r.mapId, r.name);
+    const badges = [];
+    if (r.michelin) badges.push('<span class="badge badge-michelin">⭐ ミシュラン</span>');
+    if (r.h24) badges.push('<span class="badge badge-24h">24時間</span>');
+    badges.push(`<span class="badge badge-area">${r.area}</span>`);
+    const tagHtml = r.tags.map(t => `<span class="tag">${t}</span>`).join('');
+    card.innerHTML = `
+      <div class="card-img-placeholder">${r.emoji}</div>
+      <div class="card-body">
+        <div class="card-top">
+          <div>
+            <div class="card-name">${r.name}</div>
+            <div class="card-kr">${r.kr}</div>
+          </div>
+          <div class="badges">${badges.join('')}</div>
+        </div>
+        <div class="card-genre">${r.genre}</div>
+        <div class="card-vibe">${r.vibe}</div>
+        <div class="card-tags">${tagHtml}</div>
+        <div class="card-footer">
+          <div class="card-info">
+            <span class="stars">${renderStars(r.rating)}</span>
+            <span class="rating-count">(${r.ratingCount.toLocaleString()}件) ${r.budget}</span>
+            <span class="${r.hours.includes('休') ? 'warn' : ''}">${r.hours}</span>
+          </div>
+          <a class="map-btn" href="${mapUrl}" target="_blank" rel="noopener">
+            <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8 1.5C5.51 1.5 3.5 3.51 3.5 6c0 3.75 4.5 8.5 4.5 8.5s4.5-4.75 4.5-8.5c0-2.49-2.01-4.5-4.5-4.5zm0 6a1.5 1.5 0 110-3 1.5 1.5 0 010 3z" fill="currentColor"/>
+            </svg>
+            地図
+          </a>
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+buildGrid();
+</script>
+</body>
+</html>
